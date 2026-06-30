@@ -94,7 +94,7 @@ If you find this repository useful, please cite our paper.
 ```bibtex
 @article{VNFinRAG2026,
   title={VN-FinRAG: Chart-aware Retrieval-Augmented Generation for Vietnamese Financial Reports},
-  author={Anonymous},
+  author={Ngo Tuan Tung},
   year={2026}
 }
 ```
