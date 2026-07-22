@@ -248,24 +248,13 @@ This section provides an estimated analysis of token consumption and API costs f
 **Dataset:** 500 PDF pages (1,000 charts / 2,000 API calls)
 
 - **Input Cost**  
-  
-
-(3.34 \text{ M}) \times 0.25 = 0.835 \text{ USD}(3.34 \text{ M}) \times 0.25 = 0.835 \text{ USD}
-
-
+  3.34 M × 0.25 = 0.835 USD
 
 - **Output Cost**  
-  
-
-(1.20 \text{ M}) \times 0.75 = 0.900 \text{ USD}(1.20 \text{ M}) \times 0.75 = 0.900 \text{ USD}
-
-
+  1.20 M × 0.75 = 0.900 USD
 
 - **TOTAL API COST**  
-  
-
-\approx \mathbf{1.74 \text{ USD}} (\approx \mathbf{44,000 \text{ VND}})\approx \mathbf{1.74 \text{ USD}} (\approx \mathbf{44,000 \text{ VND}})
-
+  ≈ **1.74 USD** (≈ **44,000 VND**)
 
 
 ---
