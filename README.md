@@ -223,6 +223,44 @@ python dropdb.py
 
 ---
 
+## Token & Cost Estimation
+This section provides an estimated analysis of token consumption and API costs for processing PDF documents (extracting images, chart content description, and tabular data extraction via VLM).
+### 1. Benchmark Assumptions
+* **Processing Unit:** 1 PDF page contains an average of **2 charts/figures**.
+* **Dataset Scale:** 500 PDF pages ≈\approx **1,000 charts**.
+* **VLM Model:** Gemma-4 31B Vision (or equivalent 30B-class Open-source VLM API).
+* **API Pricing Reference:**
+  * **Input Token:** $0.25\$0.25 / 1,000,0001,000,000 tokens
+  * **Output Token:** $0.75\$0.75 / 1,000,0001,000,000 tokens
+---
+### 2. Token Consumption Breakdown
+| Level | Number of Charts | API Call Count | Input Tokens (Vision + Prompt) | Output Tokens (Generated) | Total Tokens Consumed |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **1 Chart** *(both VLM functions)* | 1 | 2 calls | ~1,670 tokens | ~600 tokens | **~2,270 tokens** |
+| **1 PDF Page** *(2 charts)* | 2 | 4 calls | ~3,340 tokens | ~1,200 tokens | **~4,540 tokens** |
+| **500 PDF Pages** | 1,000 | 2,000 calls | **~3,340,000 tokens** | **~1,200,000 tokens** | **~4,540,000 tokens** |
+*Breakdown by processing function:*
+* `get_image_content`: ~850 Input Tokens | ~300 Output Tokens
+* `extract_tabular_data_vlm`: ~820 Input Tokens | ~300 Output Tokens
+---
+### 3. Estimated API Cost (Gemma-4 31B VLM)
+For a dataset of **500 PDF pages (1,000 charts / 2,000 API calls)**:
+Input Cost=3.34 M×0.25=0.25=0.835 USD\text{Input Cost} = 3.34 \text{ M} \times \$0.25 = \$0.835\text{ USD}
+Output Cost=1.20 M×0.75=0.75=0.900 USD\text{Output Cost} = 1.20 \text{ M} \times \$0.75 = \$0.900\text{ USD}
+TOTAL API COST≈$1.74 USD (≈44,000 VND)\mathbf{TOTAL\ API\ COST} \approx \mathbf{\$1.74\ USD}\ (\approx \mathbf{44,000\ VND})
+---
+### 4. Pipeline Strategy Comparison
+| Metric / Feature | Option 1: Pure VLM Pipeline<br>`get_image_content` + `extract_tabular_data_vlm` | Option 2: Hybrid DePlot (Local) + VLM<br>`get_image_content` + `extract_tabular_data` (DePlot) |
+| :--- | :--- | :--- |
+| **API Call Count** | **2,000 calls** | **1,000 calls** *(50% reduction)* |
+| **Input Tokens (500 pages)** | ~3.34M tokens | **~1.67M tokens** *(50% reduction)* |
+| **Output Tokens (500 pages)** | ~1.20M tokens | **~0.60M tokens** *(50% reduction)* |
+| **Estimated API Cost** | **~$1.74 USD (~44,000 VND)** | **~$0.87 USD (~22,000 VND)** |
+| **Hardware Requirements** | Zero (100% Cloud-based API execution) | Requires lightweight local GPU (~1-2GB VRAM) for DePlot |
+| **Extraction Quality** | **High**: Native multilingual support (Vietnamese/English), structured Markdown output. | **Moderate**: Optimal for English; raw text output requires regex/post-processing. |
+3:58 PM
+
+
 ## Tech Stack
 
 - **LLM & Vision Models**: FPT LLM (via LangChain ChatOpenAI interface), Google DePlot (`google/deplot`).
