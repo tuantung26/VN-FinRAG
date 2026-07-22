@@ -243,17 +243,30 @@ This section provides an estimated analysis of token consumption and API costs f
 * `get_image_content`: ~850 Input Tokens | ~300 Output Tokens
 * `extract_tabular_data_vlm`: ~820 Input Tokens | ~300 Output Tokens
 ---
-### 3. Estimated API Cost (Gemma-4 31B VLM)
-## Dataset: 500 PDF pages (1,000 charts / 2,000 API calls)
+### 3. Estimated API Cost (Gemma‑4 31B VLM)
 
-- **Input Cost**  
-  \(3.34 \text{ M} \times \$0.25 = \$0.835 \, \text{USD}\)
+**Dataset:** 500 PDF pages (1,000 charts / 2,000 API calls)
 
-- **Output Cost**  
-  \(1.20 \text{ M} \times \$0.75 = \$0.900 \, \text{USD}\)
+- **Input Cost**  
+  
 
-- **TOTAL API COST**  
-  \(\approx \mathbf{\$1.74 \, \text{USD}} \ (\approx \mathbf{44,000 \, VND})\)
+(3.34 \text{ M}) \times 0.25 = 0.835 \text{ USD}(3.34 \text{ M}) \times 0.25 = 0.835 \text{ USD}
+
+
+
+- **Output Cost**  
+  
+
+(1.20 \text{ M}) \times 0.75 = 0.900 \text{ USD}(1.20 \text{ M}) \times 0.75 = 0.900 \text{ USD}
+
+
+
+- **TOTAL API COST**  
+  
+
+\approx \mathbf{1.74 \text{ USD}} (\approx \mathbf{44,000 \text{ VND}})\approx \mathbf{1.74 \text{ USD}} (\approx \mathbf{44,000 \text{ VND}})
+
+
 
 ---
 ### 4. Pipeline Strategy Comparison
