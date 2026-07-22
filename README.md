@@ -51,7 +51,8 @@ flowchart TD
 tucode/
 ├── docker-compose.yml       # Milvus, ETCD, and MinIO Docker configuration
 ├── README.md                # Project documentation
-├── .env                     # Environment variables and API keys
+├── .env                     # Secret API keys (not committed to git)
+├── config.py                # System and module configurations (non-sensitive)
 ├── SplitPDF.py              # Basic PDF splitting script
 ├── chunking.py              # Word-based text chunking script
 ├── OCRDoclingEasyOCR.py     # OCR script using Docling + EasyOCR
@@ -61,7 +62,8 @@ tucode/
 ├── RAG.py                   # Basic RAG query pipeline
 │
 └── Advanced/                # Advanced Multimodal RAG Pipeline
-    ├── .env                 # Environment configuration for Advanced module
+    ├── .env                 # Secret API keys for Advanced module
+    ├── config.py            # System configuration settings for Advanced module
     ├── SplitPDF.py          # SplitPDF class implementation
     ├── text_chunker.py      # Flexible text chunking function
     ├── OCR.py               # Document OCR module returning Markdown format
@@ -91,27 +93,47 @@ Create a virtual environment and install the required packages:
 pip install pypdf pymilvus docling easyocr transformers ultralytics doclayout-yolo huggingface-hub opencv-python PyMuPDF langchain-openai python-dotenv requests numpy
 ```
 
-### 3. Environment Variables Configuration (`.env`)
-Create a `.env` file in the root directory or inside the `Advanced/` directory with the following variables:
+### 3. Configuration Setup (`.env` & `config.py`)
+
+The project separates secret API keys from non-sensitive system settings:
+
+#### A. Secret API Keys (`.env`)
+Create a `.env` file in the root directory (or in `Advanced/`) containing your secret keys:
 
 ```env
-# Milvus Config
-MILVUS_HOST=127.0.0.1
-MILVUS_PORT=19530
-COLLECTION_NAME=vectorDatabase
-DIMENSION=1024
+# API Keys 
+JINA_API_KEY=your_jina_api_key_here
+GOOGLE_API_KEY=your_google_api_key_here
+FPT_API_KEY=your_fpt_api_key_here
+WANDB_API_KEY=your_wandb_api_key_here
+```
 
-# API Keys & Endpoints
-JINA_API_KEY=jina_xxxxxxxxxxxxxxxxx
-FPT_BASE_URL=https://...
-FPT_MODEL=fpt-llm-model
-FPT_API_KEY=xxxxxxxxxxxxxxxxx
+#### B. Non-sensitive System Settings (`config.py`)
+System parameters, directory paths, and model endpoints are configured in `config.py`:
 
-# Directory Configs
-IMAGE_DIR=D:\personal\tucode\Advanced\images
-PAGES_DIR=D:\personal\tucode\Advanced\pages
-RESULTS_FILE=D:\personal\tucode\Advanced\result.txt
-MAX_PDF_TEXT_CHARS=300
+```python
+# --- Milvus ---
+MILVUS_HOST = "127.0.0.1"
+MILVUS_PORT = "19530"
+COLLECTION_NAME = "vectorDatabase"
+DIMENSION = 1024
+
+# --- Storage Directories & Output ---
+IMAGE_DIR = "images"
+PAGES_DIR = "pages"
+RESULTS_FILE = "result.txt"
+
+# --- FPT Cloud LLM ---
+FPT_BASE_URL = "https://mkp-api.fptcloud.com"
+FPT_MODEL = "gemma-3-27b-it"
+
+# --- PDF Processing ---
+MAX_PDF_TEXT_CHARS = 10000
+
+# --- W&B Inference LLM ---
+WANDB_BASE_URL = "https://api.inference.wandb.ai/v1"
+WANDB_MODEL = "google/gemma-4-31B-it"
+WANDB_PROJECT = "inference/coreweave"
 ```
 
 ---
