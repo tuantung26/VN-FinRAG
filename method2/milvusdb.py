@@ -1,13 +1,5 @@
 from pymilvus import MilvusClient, DataType
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-MILVUS_HOST = os.getenv("MILVUS_HOST")
-MILVUS_PORT = os.getenv("MILVUS_PORT")
-COLLECTION_NAME = os.getenv("COLLECTION_NAME")
-DIMENSION = int(os.getenv("DIMENSION"))
+from config import MILVUS_HOST, MILVUS_PORT, COLLECTION_NAME, DIMENSION
 
 def get_collection():
     # Kết nối Milvus

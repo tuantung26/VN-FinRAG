@@ -1,3 +1,5 @@
+from llm import get_llm_wandb
+from huggingface_hub import get_collection
 from milvusdb import *
 from embedding import *
 from dotenv import load_dotenv
@@ -5,26 +7,13 @@ import os
 import base64
 from pprint import pprint
 # pyrefly: ignore [missing-import]
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
+from config import COLLECTION_NAME
 
 
 load_dotenv()
 
-COLLECTION_NAME=os.getenv("COLLECTION_NAME")
-
-FPT_MODEL = os.getenv("FPT_MODEL")
-FPT_API_KEY = os.getenv("FPT_API_KEY")
-FPT_BASE_URL = os.getenv("FPT_BASE_URL")
-
-llm = ChatOpenAI(
-        model=FPT_MODEL,
-        api_key=FPT_API_KEY,
-        base_url=FPT_BASE_URL,
-        temperature=0.2,
-        max_tokens=2048,
-    )
-
+llm = get_llm_wandb()
 
 embedding_model = Jina()
 
@@ -119,9 +108,3 @@ if __name__ == "__main__":
     answer = run_rag("Doanh thu của xăng không chì RON 95 chênh lệch như thế nào ở năm 2025 và 2024?")
     print("\n--- KẾT QUẢ RAG ---")
     print(answer)
-
-
-
-
-    
-    

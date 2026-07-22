@@ -1,3 +1,4 @@
+from llm import get_llm_wandb
 import os
 import cv2
 from PIL import Image
@@ -5,14 +6,11 @@ from transformers import Pix2StructProcessor, Pix2StructForConditionalGeneration
 # pyrefly: ignore [missing-import]
 from doclayout_yolo import YOLOv10
 from huggingface_hub import hf_hub_download
-from dotenv import load_dotenv
 from llm import *
 import fitz  # pymupdf
 import tempfile
-
-load_dotenv()
-
-IMAGE_DIR = os.getenv("IMAGE_DIR")
+from config import IMAGE_DIR
+from llm import *
 
 class VisionProcessor:
     def __init__(self):
@@ -21,6 +19,7 @@ class VisionProcessor:
             repo_id="juliozhao/DocLayout-YOLO-DocStructBench",
             filename="doclayout_yolo_docstructbench_imgsz1024.pt"
         )
+        self.llm = get_llm_wandb()
         self.yolo_model = YOLOv10(model_path)
         self.deplot_processor = Pix2StructProcessor.from_pretrained("google/deplot")
         self.deplot_model = Pix2StructForConditionalGeneration.from_pretrained("google/deplot")
@@ -56,6 +55,20 @@ class VisionProcessor:
 
             os.remove(tmp_path)
 
+
+    def get_image_content(self,path: str):
+        with open(path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+
+        message = [
+            HumanMessage(content = [
+                {"type": "text", "text": "Hãy mô tả ngắn gọn biểu đồ sau bằng cách đưa ra những phần sau một cách đúng cấu trúc: nội dung của biểu đồ bao gồm việc biểu đồ chứa cái gì, cột x, cột y là gì nếu có, Thêm vào đó hãy đưa ra các insight cần có của biểu đồ này (Insight: insight 1, 2....)  (không dùng markdown):"},
+            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}}
+        ])
+    ]
+        response = self.llm.invoke(message)
+        return response.content 
+
     
     def extract_tabular_data(self, image_path: str) -> str:
         """dung deplot de dich bang"""
@@ -74,18 +87,20 @@ class VisionProcessor:
             return f"loi o cai deplot {str(e)}"
 
     
-    
+    def extract_tabular_data_vlm(self, image_path: str) -> str:
 
+        
+        with open(image_path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode("utf-8")
 
+        message = [
+            HumanMessage(content = [
+                {"type": "text", "text": "đọc biểu đồ sau và xuất ra thông tin đầy đủ và chính xác ở dạng bảng của biểu đồ này ở định dạng markdown, chỉ cần đưa ra một cái bảng thôi (không dùng markdown):"},
+                {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{base64_image}"}}
+            ])
+        ]
+        response = self.llm.invoke(message)
+        return response.content
 
-
-    
-
-
-
-
-
-
-    
 
 

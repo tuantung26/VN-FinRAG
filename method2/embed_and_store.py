@@ -1,34 +1,13 @@
+from milvusdb import get_collection
+from SplitPDF import SplitPDF
 import os
 from dotenv import load_dotenv
+from config import (
+    COLLECTION_NAME, IMAGE_DIR, PAGES_DIR,
+    RESULTS_FILE, MAX_PDF_TEXT_CHARS
+)
 
 load_dotenv()
-
-# Milvus Config
-MILVUS_HOST=os.getenv("MILVUS_HOST")
-MILVUS_PORT=os.getenv("MILVUS_PORT")
-COLLECTION_NAME=os.getenv("COLLECTION_NAME")
-DIMENSION=os.getenv("DIMENSION")
-
-# Thư mục lưu trữ
-IMAGE_DIR=os.getenv("IMAGE_DIR")
-
-# Jina Embeddings API
-JINA_API_KEY=os.getenv("JINA_API_KEY")
-
-# LLM (uncomment and fill in the one you use)
-# OPENAI_API_KEY=
-GOOGLE_API_KEY=os.getenv("GOOGLE_API_KEY")
-# ANTHROPIC_API_KEY=
-
-FPT_BASE_URL = os.getenv("FPT_BASE_URL")
-FPT_MODEL = os.getenv("FPT_MODEL")
-FPT_API_KEY = os.getenv("FPT_API_KEY")
-MAX_PDF_TEXT_CHARS = int(os.getenv("MAX_PDF_TEXT_CHARS", "300"))
-
-PAGES_DIR = os.getenv("PAGES_DIR")
-RESULTS_FILE = os.getenv("RESULTS_FILE")
-
-
 
 from milvusdb import *
 from imageProcess import *
@@ -77,8 +56,8 @@ def process_and_store(document_path: str):
         if file.lower().endswith('.png'):
             image_path = os.path.join(IMAGE_DIR, file)
             try:
-                tabular_data = vp.extract_tabular_data(image_path)
-                content = get_image_content(image_path)
+                tabular_data = vp.extract_tabular_data_vlm(image_path)
+                content = vp.get_image_content(image_path)
                 vector = jina.EmbeddingBysentence(content)
 
                 data = [{
@@ -99,19 +78,3 @@ def process_and_store(document_path: str):
 
 if __name__ == "__main__":
     process_and_store("D:\\personal\\tucode\\Advanced\\pdftest.pdf")
-
-    
-    
-            
-        
-    
-    
-
-        
-
-
-    
-
-
-
-    
